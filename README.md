@@ -1,1 +1,1 @@
-# ts-serverless
+# s3-thumbnail-generator
