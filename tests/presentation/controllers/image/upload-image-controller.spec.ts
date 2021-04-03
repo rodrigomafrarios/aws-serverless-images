@@ -1,6 +1,6 @@
-import { UploadImage } from "@/domain/usecases/image/upload-image"
-import { S3 } from "aws-sdk"
-import { UploadImageController } from "@/presentation/controllers/image/upload-image-controller"
+import { S3ImageParams } from '@/domain/models/image'
+import { UploadImage } from '@/domain/usecases/image/upload-image'
+import { UploadImageController } from '@/presentation/controllers/image/upload-image-controller'
 
 type SutTypes = {
   sut: UploadImageController,
@@ -9,12 +9,22 @@ type SutTypes = {
 
 const uploadImageMock = (): UploadImage => {
   class UploadImageStub implements UploadImage {
-    async upload (params: S3.PutObjectRequest): Promise<any> {
+    async upload (params: S3ImageParams): Promise<any> {
       return null
     }
   }
   return new UploadImageStub()
 }
+
+const httpRequestMock = () => ({
+  body: {
+    image: {
+      bucket: 'test-images',
+      key: './tests/presentation/mocks/image.png',
+      body: 'content'
+    }
+  }
+})
 
 const makeSut = (): SutTypes => {
   const uploadImageStub = uploadImageMock()
@@ -28,11 +38,9 @@ const makeSut = (): SutTypes => {
 describe('Controller - UploadImage', () => {
   test('Should call UploadImage with correct values', async () => {
     const { sut, uploadImageStub } = makeSut()
-    const image = {
-      path: './tests/presentation/mocks/image.png'
-    }
+    const { body } = httpRequestMock()
     const uploadImageSpy = jest.spyOn(uploadImageStub, 'upload')
-    await sut.handle(image)
-    expect(uploadImageSpy).toHaveBeenCalledWith(image)
+    await sut.handle(httpRequestMock())
+    expect(uploadImageSpy).toHaveBeenCalledWith(body.image)
   })
 })

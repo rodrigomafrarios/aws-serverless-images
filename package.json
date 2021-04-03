@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/rodrigomafrarios/s3-thumbnail-generator#readme",
   "devDependencies": {
+    "@types/aws-lambda": "^8.10.73",
     "@types/aws-sdk": "^2.7.0",
     "@types/jest": "^26.0.22",
     "@types/node": "^14.14.37",

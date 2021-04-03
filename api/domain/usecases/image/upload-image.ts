@@ -1,5 +1,5 @@
-import { S3 } from 'aws-sdk'
+import { S3ImageParams } from '@/domain/models/image'
 
 export interface UploadImage {
-  upload: (params: S3.PutObjectRequest) => Promise<any> 
+  upload: (s3ImageParams: S3ImageParams) => Promise<any> 
 }
