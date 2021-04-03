@@ -7,7 +7,11 @@
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",
     "test:ci": "npm test -- --coverage",
-    "test:staged": "npm test -- --findRelatedTests"
+    "test:staged": "npm test -- --findRelatedTests",
+    "prepare": "husky install",
+    "add:lint-staged": "npx mrm lint-staged",
+    "hooks:pre-commit": "npm run add:lint-staged && npx husky add .husky/pre-commit 'npx lint-staged'",
+    "hooks:add": "npm run prepare && npm run hooks:pre-commit"
   },
   "repository": {
     "type": "git",
@@ -43,5 +47,12 @@
   },
   "_moduleAliases": {
     "@": "dist"
+  },
+  "lint-staged": {
+    "*.ts": [
+      "eslint 'api/**' --fix",
+      "npm run test:staged",
+      "git add"
+    ]
   }
 }
