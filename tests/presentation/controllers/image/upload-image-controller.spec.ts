@@ -1,7 +1,7 @@
 import { S3ImageParams } from '@/domain/models/image'
 import { UploadImage } from '@/domain/usecases/image/upload-image'
 import { UploadImageController } from '@/presentation/controllers/image/upload-image-controller'
-import { badRequest } from '@/presentation/helpers/http-helper'
+import { badRequest, noContent, serverError } from '@/presentation/helpers/http-helper'
 import { ImageValidator } from '@/presentation/interfaces/image-validator'
 
 type SutTypes = {
@@ -22,7 +22,7 @@ const fileValidatorMock = () => {
 const uploadImageMock = (): UploadImage => {
   class UploadImageStub implements UploadImage {
     async upload (params: S3ImageParams): Promise<any> {
-      return null
+      return Promise.resolve()
     }
   }
   return new UploadImageStub()
@@ -73,5 +73,20 @@ describe('Controller - UploadImage', () => {
     const uploadImageSpy = jest.spyOn(uploadImageStub, 'upload')
     await sut.handle(httpRequestMock())
     expect(uploadImageSpy).toHaveBeenCalledWith(body.image)
+  })
+
+  test('Should return 500 if UploadImage throws', async () => {
+    const { sut, uploadImageStub } = makeSut()
+    jest.spyOn(uploadImageStub, 'upload').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const httpResponse = await sut.handle(httpRequestMock())
+    expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 204 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(httpRequestMock())
+    expect(httpResponse).toEqual(noContent())
   })
 })
