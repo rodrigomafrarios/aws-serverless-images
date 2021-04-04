@@ -1,4 +1,5 @@
 import { UploadImage } from '@/domain/usecases/image/upload-image'
+import { badRequest } from '@/presentation/helpers/http-helper'
 import { Controller } from '@/presentation/interfaces/controller'
 import { HttpRequest, HttpResponse } from '@/presentation/interfaces/http'
 import { ImageValidator } from '@/presentation/interfaces/image-validator'
@@ -11,7 +12,10 @@ export class UploadImageController implements Controller {
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     const { body } = httpRequest
-    this.imageValidator.isValid(body.image)
+    const isValid = this.imageValidator.isValid(body.image)
+    if (!isValid) {
+      return badRequest(new Error('Image is no valid'))
+    }
     await this.uploadImage.upload(body.image)
     return null
   }
