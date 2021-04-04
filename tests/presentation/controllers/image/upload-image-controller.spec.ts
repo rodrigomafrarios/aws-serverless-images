@@ -1,10 +1,21 @@
 import { S3ImageParams } from '@/domain/models/image'
 import { UploadImage } from '@/domain/usecases/image/upload-image'
 import { UploadImageController } from '@/presentation/controllers/image/upload-image-controller'
+import { ImageValidator } from '@/presentation/interfaces/image-validator'
 
 type SutTypes = {
-  sut: UploadImageController,
+  sut: UploadImageController
+  imageValidatorStub: ImageValidator
   uploadImageStub: UploadImage
+}
+
+const fileValidatorMock = () => {
+  class FileValidatorStub implements ImageValidator {
+    isValid (image: any): boolean {
+      return false
+    }
+  }
+  return new FileValidatorStub()
 }
 
 const uploadImageMock = (): UploadImage => {
@@ -28,14 +39,24 @@ const httpRequestMock = () => ({
 
 const makeSut = (): SutTypes => {
   const uploadImageStub = uploadImageMock()
-  const sut = new UploadImageController(uploadImageStub)
+  const imageValidatorStub = fileValidatorMock()
+  const sut = new UploadImageController(uploadImageStub, imageValidatorStub)
   return {
     sut,
+    imageValidatorStub,
     uploadImageStub
   }
 }
 
 describe('Controller - UploadImage', () => {
+  test('Should call Validation with correct value', async () => {
+    const { sut, imageValidatorStub } = makeSut()
+    const { body } = httpRequestMock()
+    const imageValidatorSpy = jest.spyOn(imageValidatorStub, 'isValid')
+    await sut.handle(httpRequestMock())
+    expect(imageValidatorSpy).toHaveBeenCalledWith(body.image)
+  })
+
   test('Should call UploadImage with correct values', async () => {
     const { sut, uploadImageStub } = makeSut()
     const { body } = httpRequestMock()
