@@ -48,5 +48,13 @@ describe('Image S3 Repository', () => {
       await sut.upload(s3ParamsMock())
       expect(storageServiceSpy).toHaveBeenCalledWith(s3ParamsMock())
     })
+    test('Should throw if S3Service throws', async () => {
+      const { sut, storageServiceStub } = makeSut()
+      jest.spyOn(storageServiceStub, 'put').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const promise = sut.upload(s3ParamsMock())
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
