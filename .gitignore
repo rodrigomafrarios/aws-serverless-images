@@ -2,3 +2,5 @@ node_modules
 coverage
 .serverless
 .husky
+terraform/env/dev/.terraform
+terraform/env/dev/.terraform.lock.hcl
