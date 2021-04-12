@@ -1,13 +1,14 @@
-import * as AWS from 'aws-sdk'
 import S3 from 'aws-sdk/clients/s3'
+import * as AWS from 'aws-sdk'
+import * as AWSMock from 'aws-sdk-mock'
 import fs from 'fs'
 import path from 'path'
 import { ImageS3Repository } from '@/infra/storage/s3/image-s3-repository'
-import { S3Service } from '@/services/s3'
+import { S3ClientFactory } from '@/infra/aws/aws-config-factory'
 
 type SutTypes = {
   sut: ImageS3Repository
-  storageServiceStub: S3Service
+  client: S3
 }
 
 const s3ParamsMock = (): S3.Types.PutObjectRequest => ({
@@ -16,45 +17,30 @@ const s3ParamsMock = (): S3.Types.PutObjectRequest => ({
   Key: 'any-image.png'
 })
 
-const s3ClientFactory = (config: S3.Types.ClientConfiguration) => {
-  return new AWS.S3(config)
-}
-
-const s3ServiceStub = (): S3Service => {
-  class S3ServiceStub implements S3Service {
-    async put (s3Params: S3.Types.PutObjectRequest): Promise<any> {
-      const client = s3ClientFactory({ apiVersion: '2012-08-10' })
-      const results = await client.putObject(s3ParamsMock())
-      return results
-    }
-  }
-  return new S3ServiceStub()
-}
-
 const makeSut = (): SutTypes => {
-  const storageServiceStub = s3ServiceStub()
-  const sut = new ImageS3Repository(storageServiceStub)
+  const client = S3ClientFactory({
+    apiVersion: '2006-03-01',
+    Bucket: 'any-Bucket'
+  })
+  const sut = new ImageS3Repository(client)
   return {
     sut,
-    storageServiceStub
+    client
   }
 }
 
+AWSMock.setSDKInstance(AWS)
+
 describe('Image S3 Repository', () => {
+  beforeEach(() => {
+    AWSMock.restore('S3')
+  })
   describe('upload()', () => {
-    test('Should call S3Service with correct values', async () => {
-      const { sut, storageServiceStub } = makeSut()
-      const storageServiceSpy = jest.spyOn(storageServiceStub, 'put')
+    test('Should call S3 PutObject with correct values', async () => {
+      const { sut, client } = makeSut()
+      const clientSpy = jest.spyOn(client, 'putObject')
       await sut.upload(s3ParamsMock())
-      expect(storageServiceSpy).toHaveBeenCalledWith(s3ParamsMock())
-    })
-    test('Should throw if S3Service throws', async () => {
-      const { sut, storageServiceStub } = makeSut()
-      jest.spyOn(storageServiceStub, 'put').mockImplementationOnce(() => {
-        throw new Error()
-      })
-      const promise = sut.upload(s3ParamsMock())
-      await expect(promise).rejects.toThrow()
+      expect(clientSpy).toHaveBeenCalledWith(s3ParamsMock())
     })
   })
 })

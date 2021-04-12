@@ -1,11 +1,10 @@
 import { UploadImageRepository } from '@/data/interfaces/storage/image/upload-image-repository'
-import { S3Service } from '@/services/s3'
-import S3 from 'aws-sdk/clients/s3'
+import S3, { PutObjectRequest } from 'aws-sdk/clients/s3'
 
 export class ImageS3Repository implements UploadImageRepository {
-  constructor (private readonly storageService: S3Service) {}
+  constructor (private readonly client: S3) {}
 
-  async upload (params: S3.Types.PutObjectRequest): Promise<void> {
-    await this.storageService.put(params)
+  async upload (params: PutObjectRequest): Promise<void> {
+    await this.client.putObject(params)
   }
 }
