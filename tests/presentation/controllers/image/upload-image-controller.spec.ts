@@ -64,7 +64,7 @@ describe('Controller - UploadImage', () => {
       return false
     })
     const httpResponse = await sut.handle(httpRequestMock())
-    expect(httpResponse).toEqual(badRequest(new Error('Image is no valid')))
+    expect(httpResponse).toEqual(badRequest(new Error('Image is not valid')))
   })
 
   test('Should call UploadImage with correct values', async () => {

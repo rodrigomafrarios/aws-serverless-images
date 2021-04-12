@@ -15,7 +15,7 @@ export class UploadImageController implements Controller {
       const { body } = httpRequest
       const isValid = await this.imageValidator.isValid(body.image)
       if (!isValid) {
-        return badRequest(new Error('Image is no valid'))
+        return badRequest(new Error('Image is not valid'))
       }
       await this.uploadImage.upload(body.image)
       return noContent()
