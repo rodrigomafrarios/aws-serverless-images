@@ -1,6 +1,6 @@
 import { ImageValidatorAdapter } from '@/utils/image-validator-adapter'
-import path from 'path'
-import fs from 'fs'
+import * as path from 'path'
+import * as fs from 'fs'
 
 const image = fs.readFileSync(path.resolve(path.join(__dirname,'../presentation/mocks/image.png')))
 const imageOutOfLimitSize = fs.readFileSync(path.resolve(path.join(__dirname,'../presentation/mocks/AsterNovi-belgii-flower-1mb.jpg')))

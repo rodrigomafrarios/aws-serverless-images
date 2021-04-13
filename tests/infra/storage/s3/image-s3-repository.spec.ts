@@ -1,8 +1,8 @@
-import S3 from 'aws-sdk/clients/s3'
+import * as S3 from 'aws-sdk/clients/s3'
 import * as AWS from 'aws-sdk'
 import * as AWSMock from 'aws-sdk-mock'
-import fs from 'fs'
-import path from 'path'
+import * as fs from 'fs'
+import * as path from 'path'
 import { ImageS3Repository } from '@/infra/storage/s3/image-s3-repository'
 import { S3ClientFactory } from '@/infra/aws/aws-config-factory'
 
