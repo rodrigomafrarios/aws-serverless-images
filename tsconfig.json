@@ -1,17 +1,22 @@
 {
+  "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "outDir": "dist",
-    "module": "commonjs",
-    "target": "es2019",
+    "lib": ["ESNext"],
+    "moduleResolution": "node",
+    "removeComments": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "rootDirs": ["api", "tests"],
-    "baseUrl": "api",
-    "paths": {
-      "@/tests/*": ["../tests/*"],
-      "@/*": ["*"]
-    }
+    "target": "ES2020",
   },
-  "include": ["api", "tests"],
-  "exclude": []
+  "include": ["api/**/*.ts","tests","serverless.ts"],
+  "exclude": [
+    "node_modules/**/*",
+    ".serverless/**/*",
+    ".webpack/**/*",
+    "_warmup/**/*",
+    ".vscode/**/*"
+  ],
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+  }
 }

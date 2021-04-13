@@ -1,3 +1,19 @@
-import { makeUploadImageController } from '@/main/factories/controllers/image/upload-image-controller-factory'
+import schema from '@/main/lambdas/schema'
+import { handlerPath } from '@/libs/handlerResolver'
 
-export const handler = makeUploadImageController()
+export default {
+  handler: `${handlerPath(__dirname)}/handler.main`,
+  events: [
+    {
+      http: {
+        method: 'post',
+        path: 'image/create',
+        request: {
+          schema: {
+            'application/json': schema
+          }
+        }
+      }
+    }
+  ]
+}
