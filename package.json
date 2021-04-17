@@ -4,7 +4,7 @@
   "description": "Serverless aws-nodejs-typescript template",
   "main": "serverless.ts",
   "scripts": {
-    "debug": "LOGGER_LEVEL=trace AWS_PROFILE=rodrigo.mafra.user sls offline --noPrependStageInUrl --printOutput --noTimeout --lazy",
+    "debug": "LOGGER_LEVEL=trace AWS_PROFILE=dev sls offline --noPrependStageInUrl --printOutput --noTimeout --lazy",
     "test": "jest --passWithNoTests --silent --noStackTrace --runInBand",
     "test:verbose": "jest --passWithNoTests",
     "test:unit": "npm test -- --watch -c jest-unit-config.js",

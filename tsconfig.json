@@ -1,12 +1,17 @@
 {
   "extends": "./tsconfig.paths.json",
   "compilerOptions": {
-    "lib": ["ESNext"],
-    "moduleResolution": "node",
+    "target": "ES2019",
+    "lib": [
+      "es2019",
+      "es2020.bigint",
+      "es2020.string",
+      "es2020.symbol.wellknown"
+    ],
+    "module": "commonjs",
     "removeComments": true,
     "esModuleInterop": true,
     "sourceMap": true,
-    "target": "ES2020",
   },
   "include": ["api/**/*.ts","tests","serverless.ts"],
   "exclude": [

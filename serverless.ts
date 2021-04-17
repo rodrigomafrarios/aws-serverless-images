@@ -11,17 +11,17 @@ const serverlessConfiguration: AWS = {
       includeModules: true
     }
   },
-  plugins: ['serverless-webpack'],
+  plugins: ['serverless-plugin-typescript', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
+    profile: 'dev',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      AWS_REGION: 'us-east-1',
       IMAGE_BUCKET: 'uploaded-images-dev'
     },
     lambdaHashingVersion: '20201221'
