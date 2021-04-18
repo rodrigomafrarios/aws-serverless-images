@@ -31,9 +31,9 @@ const uploadImageMock = (): UploadImage => {
 const httpRequestMock = () => ({
   body: {
     image: {
-      bucket: 'test-images',
-      key: './tests/presentation/mocks/image.png',
-      body: 'content'
+      Bucket: 'test-images',
+      Key: './tests/presentation/mocks/image.png',
+      Body: 'content'
     }
   }
 })
@@ -53,9 +53,10 @@ describe('Controller - UploadImage', () => {
   test('Should call Validation with correct value', async () => {
     const { sut, imageValidatorStub } = makeSut()
     const { body } = httpRequestMock()
+    const { image } = body
     const imageValidatorSpy = jest.spyOn(imageValidatorStub, 'isValid')
     await sut.handle(httpRequestMock())
-    expect(imageValidatorSpy).toHaveBeenCalledWith(body.image)
+    expect(imageValidatorSpy).toHaveBeenCalledWith(image.Body)
   })
 
   test('Should return 400 if validation fails', async () => {

@@ -13,11 +13,12 @@ export class UploadImageController implements Controller {
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     try {
       const { body } = httpRequest
-      const isValid = await this.imageValidator.isValid(body.image)
+      const { image } = body
+      const isValid = await this.imageValidator.isValid(image.Body)
       if (!isValid) {
         return badRequest(new Error('Image is not valid'))
       }
-      await this.uploadImage.upload(body.image)
+      await this.uploadImage.upload(image)
       return noContent()
     } catch (error) {
       return serverError(error)
