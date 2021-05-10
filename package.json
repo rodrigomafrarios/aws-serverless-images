@@ -67,6 +67,6 @@
   "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
   "license": "MIT",
   "lint-staged": {
-    "*.ts": "eslint --cache --fix"
+    "*.ts": "eslint --fix"
   }
 }
