@@ -1,10 +1,9 @@
 import * as S3 from 'aws-sdk/clients/s3'
 import * as AWS from 'aws-sdk'
 import * as AWSMock from 'aws-sdk-mock'
-import * as fs from 'fs'
-import * as path from 'path'
 import { ImageS3Repository } from '@/infra/storage/s3/image-s3-repository'
 import { S3ClientFactory } from '@/infra/aws/aws-config-factory'
+import MockDate from 'mockdate'
 
 type SutTypes = {
   sut: ImageS3Repository
@@ -12,9 +11,11 @@ type SutTypes = {
 }
 
 const s3ParamsMock = (): S3.Types.PutObjectRequest => ({
-  Body: Buffer.from(fs.readFileSync(path.resolve(__dirname + '../../../../presentation/mocks/image.png'))),
+  Body: 'any-buffer',
   Bucket: 'any-bucket',
-  Key: 'any-image.png'
+  Key: 'any-image.png',
+  ContentType: 'image/png',
+  ContentEncoding: 'base64'
 })
 
 const makeSut = (): SutTypes => {
@@ -32,15 +33,39 @@ const makeSut = (): SutTypes => {
 AWSMock.setSDKInstance(AWS)
 
 describe('Image S3 Repository', () => {
+  beforeAll(async () => {
+    MockDate.set(new Date())
+  })
+  afterAll(async () => {
+    MockDate.reset()
+  })
   beforeEach(() => {
     AWSMock.restore('S3')
   })
   describe('upload()', () => {
     test('Should call S3 PutObject with correct values', async () => {
+      try {
+        const { sut, client } = makeSut()
+        const clientSpy = jest.spyOn(client, 'putObject')
+        await sut.upload(s3ParamsMock())
+        expect(clientSpy).toHaveBeenCalledWith(s3ParamsMock())
+      } catch (error) {
+        console.log(error)
+      }
+    })
+
+    test('Should throw if S3 PutObject throws', async () => {
       const { sut, client } = makeSut()
-      const clientSpy = jest.spyOn(client, 'putObject')
-      await sut.upload(s3ParamsMock())
-      expect(clientSpy).toHaveBeenCalledWith(s3ParamsMock())
+      jest.spyOn(client, 'putObject').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const promise = sut.upload({
+        Body: '',
+        Bucket: '',
+        Key: ''
+      })
+
+      await expect(promise).rejects.toThrow()
     })
   })
 })
