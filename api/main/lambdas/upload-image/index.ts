@@ -1,4 +1,4 @@
-import schema from '@/main/lambdas/schema'
+import schema from '@/main/lambdas/upload-image/schema'
 import { handlerPath } from '@/libs/handlerResolver'
 
 export default {

@@ -3,7 +3,7 @@ import 'source-map-support/register'
 
 import type { ValidatedEventAPIGatewayProxyEvent } from '@/libs/apiGateway'
 import { middyfy } from '@/libs/lambda'
-import schema from '@/main/lambdas/schema'
+import schema from '@/main/lambdas/upload-image/schema'
 import { imageAdapt } from '@/main/adapters/image-adapter'
 import { lambdaAdapt } from '@/main/adapters/lambda-adapter'
 
