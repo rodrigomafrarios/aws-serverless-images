@@ -5,12 +5,6 @@ import { uploadImage } from '@/main/lambdas'
 const serverlessConfiguration: AWS = {
   service: 's3-thumbnail-generator',
   frameworkVersion: '2',
-  custom: {
-    webpack: {
-      webpackConfig: './webpack.config.js',
-      includeModules: true
-    }
-  },
   plugins: ['serverless-plugin-typescript', 'serverless-offline'],
   provider: {
     name: 'aws',
@@ -22,7 +16,9 @@ const serverlessConfiguration: AWS = {
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      IMAGE_BUCKET: 'uploaded-images-dev'
+      IMAGE_BUCKET: 'uploaded-images-dev',
+      AWS_ACCESS_KEY_ID: 'AKIARJU55LRSE6Q5AJGC',
+      AWS_SECRET_ACCESS_KEY: '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'
     },
     lambdaHashingVersion: '20201221'
   },

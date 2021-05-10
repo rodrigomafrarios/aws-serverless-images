@@ -3,5 +3,6 @@ coverage
 .serverless
 .husky
 .build
+dist
 terraform/env/dev/.terraform
 terraform/env/dev/.terraform.lock.hcl
