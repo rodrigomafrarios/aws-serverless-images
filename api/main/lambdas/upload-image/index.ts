@@ -2,7 +2,11 @@ import schema from '@/main/lambdas/upload-image/schema'
 import { handlerPath } from '@/libs/handlerResolver'
 
 export default {
-  handler: `${handlerPath(__dirname)}/handler.main`,
+  role: "${ssm:${self:custom.stage}-upload-image-iam-role}",
+  environment: {
+    IMAGE_BUCKET: "${ssm:${self:custom.stage}-upload-image-bucket}"
+  },
+  handler: `${handlerPath(__dirname)}/main.handler`,
   events: [
     {
       http: {

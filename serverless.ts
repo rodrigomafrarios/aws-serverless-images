@@ -10,17 +10,19 @@ const serverlessConfiguration: AWS = {
     name: 'aws',
     runtime: 'nodejs14.x',
     profile: 'dev',
+    stage: 'dev',
+    region: 'us-east-1',
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true
     },
     environment: {
-      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
-      IMAGE_BUCKET: 'uploaded-images-dev',
-      AWS_ACCESS_KEY_ID: 'AKIARJU55LRSE6Q5AJGC',
-      AWS_SECRET_ACCESS_KEY: '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'
+      AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1'
     },
     lambdaHashingVersion: '20201221'
+  },
+  custom: {
+    stage: "${opt:stage, self:provider.stage}"
   },
   // import the function via paths
   functions: { uploadImage }

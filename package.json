@@ -15,7 +15,7 @@
     "hooks:pre-commit": "npm run add:lint-staged && npx husky add .husky/pre-commit 'npx lint-staged'",
     "hooks:add": "npm run prepare && npm run hooks:pre-commit",
     "lint": "eslint --cache --ext .ts api/",
-    "build": "sucrase ./api -d ./.build --transforms typescript,imports && tsc -p tsconfig-build.json",
+    "build": "sucrase ./api -d ./dist --transforms typescript,imports && tsc -p tsconfig-build.json",
     "build:watch": "sucrase ./api -d ./.build --transforms typescript,imports && tsc -p tsconfig-build.json -w",
     "postbuild": "cp package.json dist/package.json && cd dist && npm install --production && zip -r latest.zip ./"
   },
@@ -65,6 +65,11 @@
   "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
   "license": "MIT",
   "lint-staged": {
-    "*.ts": "eslint --fix"
+    "*.ts": [
+      "npm run test:staged"
+    ]
+  },
+  "_moduleAliases": {
+    "@": "./api"
   }
 }
