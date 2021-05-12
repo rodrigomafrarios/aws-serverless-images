@@ -1,4 +1,5 @@
 provider "aws" {
   region  = var.region
-  profile = "rodrigo.mafra.user"
+  shared_credentials_file = "$HOME/.aws/credentials"
+  alias = "dev"
 }
