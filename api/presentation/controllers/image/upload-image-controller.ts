@@ -21,6 +21,7 @@ export class UploadImageController implements Controller {
       await this.uploadImage.upload(image)
       return noContent()
     } catch (error) {
+      console.error(error)
       return serverError(error)
     }
   }

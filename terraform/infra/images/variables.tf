@@ -2,6 +2,18 @@ variable "env" {
 
 }
 
-variable "bucket_actions" {
+variable "region" {
 
+}
+
+variable "account_id" {
+
+}
+
+variable "authorizer_fn" {
+
+}
+
+variable "bucket_actions" {
+  
 }

@@ -7,3 +7,4 @@ dist
 terraform/env/dev/.terraform
 terraform/env/dev/.terraform.lock.hcl
 terraform/env/dev/terraform.tfstate.d
+.terraform

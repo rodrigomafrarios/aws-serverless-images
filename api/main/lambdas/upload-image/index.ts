@@ -12,6 +12,9 @@ export default {
       http: {
         method: 'post',
         path: 'image/create',
+        authorizer: {
+          arn: "${ssm:${self:custom.stage}-authorizer-arn}"
+        },
         request: {
           schema: {
             'application/json': schema
