@@ -2,6 +2,7 @@ import { S3CreateEvent } from 'aws-lambda'
 import { CreateThumbnailController } from '@/presentation/controllers/thumbnail/create-thumbnail-controller'
 import { ThumbnailValidator } from '@/presentation/interfaces/thumbnail-validator'
 import { HttpRequest } from '@/presentation/interfaces'
+import { badRequest } from '@/presentation/helpers/http-helper'
 
 type SutTypes = {
   sut: CreateThumbnailController
@@ -56,8 +57,8 @@ const mockHttpRequest = (): HttpRequest => {
 
 const mockValidatorStub = (): ThumbnailValidator => {
   class ThumbnailValidatorStub implements ThumbnailValidator {
-    isValid (bucket: string, key: string): boolean {
-      return false
+    async isValid (bucket: string, key: string): Promise<boolean> {
+      return Promise.resolve(true)
     }
   }
   return new ThumbnailValidatorStub()
@@ -88,5 +89,13 @@ describe('CreateThumbnailController', () => {
     const key = Records[0].s3.object.key
 
     expect(thumbnailValidatorSpy).toHaveBeenCalledWith(bucket, key)
+  })
+
+  test('Should return 400 if validation fails', async () => {
+    const { sut, thumbnailValidator } = makeSut()
+    jest.spyOn(thumbnailValidator, 'isValid').mockResolvedValueOnce(false)
+    const httpResponse = await sut.handle(mockHttpRequest())
+    
+    expect(httpResponse).toEqual(badRequest(new Error('Error on validation')))
   })
 })

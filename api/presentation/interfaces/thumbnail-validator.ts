@@ -1,3 +1,3 @@
 export interface ThumbnailValidator {
-	isValid: (bucket: string, key: string) => boolean
+	isValid: (bucket: string, key: string) => Promise<boolean>
 }
