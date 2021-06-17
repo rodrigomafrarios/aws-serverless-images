@@ -4,7 +4,7 @@ import {
 import {
   ThumbnailValidator
 } from '@/presentation/interfaces/thumbnail-validator'
-import { badRequest } from '@/presentation/helpers/http-helper'
+import { badRequest, serverError } from '@/presentation/helpers/http-helper'
 import {
   mockCreateThumbnail,
   mockHttpRequest,
@@ -70,5 +70,14 @@ describe('CreateThumbnailController', () => {
       Bucket: bucket,
       Key: key
     })
+  })
+
+  test('Should return 500 if createThumbnail throws', async () => {
+    const { sut, createThumbnail } = makeSut()
+
+    jest.spyOn(createThumbnail, 'create').mockRejectedValueOnce(new Error())
+    const httpResponse = await sut.handle(mockHttpRequest())
+
+    expect(httpResponse).toEqual(serverError(new Error()))
   })
 })
