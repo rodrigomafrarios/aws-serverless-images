@@ -21,3 +21,10 @@ export const noContent = (): HttpResponse => {
 		body: null
 	}
 }
+
+export const created = (): HttpResponse => {
+	return {
+		statusCode: 201,
+		body: null
+	}
+}

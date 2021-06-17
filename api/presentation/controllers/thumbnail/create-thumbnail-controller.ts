@@ -1,5 +1,5 @@
 import { CreateThumbnail } from '@/domain/usecases/thumbnail/create-thumbnail'
-import { badRequest, serverError } from '@/presentation/helpers/http-helper'
+import { badRequest, created, serverError } from '@/presentation/helpers/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/interfaces'
 import { ThumbnailValidator } from '@/presentation/interfaces/thumbnail-validator'
 
@@ -25,6 +25,8 @@ export class CreateThumbnailController implements Controller {
         Bucket: bucket,
         Key: key
       })
+
+      return created()
     } catch (error) {
       return serverError(error)
     }

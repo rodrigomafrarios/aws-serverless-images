@@ -4,7 +4,11 @@ import {
 import {
   ThumbnailValidator
 } from '@/presentation/interfaces/thumbnail-validator'
-import { badRequest, serverError } from '@/presentation/helpers/http-helper'
+import {
+  badRequest,
+  created,
+  serverError
+} from '@/presentation/helpers/http-helper'
 import {
   mockCreateThumbnail,
   mockHttpRequest,
@@ -79,5 +83,11 @@ describe('CreateThumbnailController', () => {
     const httpResponse = await sut.handle(mockHttpRequest())
 
     expect(httpResponse).toEqual(serverError(new Error()))
+  })
+
+  test('Should return 201 on success', async () => {
+    const { sut } = makeSut()
+    const httpResponse = await sut.handle(mockHttpRequest())
+    expect(httpResponse).toEqual(created())
   })
 })
