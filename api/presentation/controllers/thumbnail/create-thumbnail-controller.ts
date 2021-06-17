@@ -1,9 +1,13 @@
+import { CreateThumbnail } from '@/domain/usecases/thumbnail/create-thumbnail'
 import { badRequest } from '@/presentation/helpers/http-helper'
 import { Controller, HttpRequest, HttpResponse } from '@/presentation/interfaces'
 import { ThumbnailValidator } from '@/presentation/interfaces/thumbnail-validator'
 
 export class CreateThumbnailController implements Controller {
-  constructor (private readonly thumbnailValidator: ThumbnailValidator) {}
+  constructor (
+    private readonly thumbnailValidator: ThumbnailValidator,
+    private readonly createThumbnail: CreateThumbnail
+  ) {}
 
   async handle (httpRequest: HttpRequest): Promise<HttpResponse> {
     const { body } = httpRequest
@@ -15,6 +19,12 @@ export class CreateThumbnailController implements Controller {
     if (!isValid) {
       return badRequest(new Error('Error on validation'))
     }
+
+    await this.createThumbnail.create({
+      Bucket: bucket,
+      Key: key
+    })
+    
     return null
   }
 }
