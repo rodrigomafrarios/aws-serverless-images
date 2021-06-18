@@ -1,11 +1,15 @@
 import type { AWS } from '@serverless/typescript'
 
-import { uploadImage } from '@/main/lambdas'
+import { uploadImage, createThumbnail } from '@/main/lambdas'
 
 const serverlessConfiguration: AWS = {
   service: 's3-thumbnail-generator',
   frameworkVersion: '2',
-  plugins: ['serverless-plugin-typescript', 'serverless-offline'],
+  plugins: [
+    'serverless-plugin-typescript',
+    'serverless-offline',
+    'serverless-plugin-existing-s3'
+  ],
   provider: {
     name: 'aws',
     runtime: 'nodejs14.x',
@@ -25,7 +29,7 @@ const serverlessConfiguration: AWS = {
     stage: "${opt:stage, self:provider.stage}"
   },
   // import the function via paths
-  functions: { uploadImage }
+  functions: { uploadImage, createThumbnail }
 }
 
 module.exports = serverlessConfiguration
