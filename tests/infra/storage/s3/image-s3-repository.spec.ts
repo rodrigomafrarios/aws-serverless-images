@@ -87,5 +87,19 @@ describe('Image S3 Repository', () => {
         console.log(error)
       }
     })
+
+    test('Should throw if S3 GetObject throws', async () => {
+      const { sut, client } = makeSut()
+      jest.spyOn(client, 'getObject').mockImplementationOnce(() => {
+        throw new Error()
+      })
+      const { Key, Bucket } = s3ParamsMock()
+      const promise = sut.loadByKey({
+        Bucket,
+        Key
+      })
+
+      await expect(promise).rejects.toThrow()
+    })
   })
 })
