@@ -68,4 +68,24 @@ describe('Image S3 Repository', () => {
       await expect(promise).rejects.toThrow()
     })
   })
+
+  describe('loadByKey()', () => {
+    test('Should call getObject with correct values', async () => {
+      try {
+        const { sut, client } = makeSut()
+        const clientSpy = jest.spyOn(client, 'getObject')
+        const { Key, Bucket } = s3ParamsMock()
+        await sut.loadByKey({
+          Bucket,
+          Key
+        })
+        expect(clientSpy).toHaveBeenCalledWith({
+          Bucket,
+          Key
+        })
+      } catch (error) {
+        console.log(error)
+      }
+    })
+  })
 })
