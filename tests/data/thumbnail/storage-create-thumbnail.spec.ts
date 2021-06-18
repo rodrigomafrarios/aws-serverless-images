@@ -81,6 +81,16 @@ describe('StorageCreateThumbnail - Usecase', () => {
     expect(loadImageSpy).toHaveBeenCalledWith(mockCreateThumbnailParams())
   })
 
+  test('Should throw if LoadImageRepository throws', async () => {
+    const { sut, loadImageRepositoryStub } = makeSut()
+    jest.spyOn(loadImageRepositoryStub, 'loadByKey')
+    .mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.create(mockCreateThumbnailParams())
+    await expect(promise).rejects.toThrow()
+  })
+
   test('Should call FormatImage with base64 string', async () => {
     const { sut, formatImageStub } = makeSut()
     const formatImageSpy = jest.spyOn(formatImageStub, 'createThumbnail')
