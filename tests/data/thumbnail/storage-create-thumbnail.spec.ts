@@ -143,4 +143,13 @@ describe('StorageCreateThumbnail - Usecase', () => {
     await sut.create(mockCreateThumbnailParams())
     expect(createThumbnailSpy).toHaveBeenCalledWith(mockS3ThumbnailParams())
   })
+
+  test('Should throw if CreateThumbnailRepository throws', async () => {
+    const { sut, createThumbnailRepositoryStub } = makeSut()
+    jest.spyOn(createThumbnailRepositoryStub, 'create').mockImplementationOnce(() => {
+      throw new Error()
+    })
+    const promise = sut.create(mockCreateThumbnailParams())
+    await expect(promise).rejects.toThrow()
+  })
 })
