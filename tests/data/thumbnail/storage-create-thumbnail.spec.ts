@@ -4,19 +4,26 @@ import {
 } from '@/data/usecases/thumbnail/storage-create-thumbnail'
 import { 
   GetObjectOutput,
-  GetObjectRequest
+  GetObjectRequest,
+  PutObjectOutput,
+  PutObjectRequest
 } from 'aws-sdk/clients/s3'
-import { AWSError } from 'aws-sdk'
 import { 
   LoadImageRepository 
 } from '@/data/interfaces/storage/image/load-image-repository'
 import { S3ThumbnailParams } from '@/domain/models/thumbnail'
 import MockDate from 'mockdate'
 import { FormatImage } from '@/data/interfaces/format'
+import { 
+  CreateThumbnailRepository 
+} from '@/data/interfaces/storage/thumbnail/create-thumbnail-repository'
+import { AWSError } from 'aws-sdk'
+import { S3ImageParams } from '@/domain/models/image'
 
 type SutTypes = {
   sut: CreateThumbnail
   loadImageRepositoryStub: LoadImageRepository
+  createThumbnailRepositoryStub: CreateThumbnailRepository
   formatImageStub: FormatImage
 }
 
@@ -43,6 +50,15 @@ const mockLoadImageRepository = (): LoadImageRepository => {
   return new LoadImageRepositoryStub()
 }
 
+const mockCreateThumbnailRepositoryStub = (): CreateThumbnailRepository => {
+  class CreateThumbnailRepositoryStub implements CreateThumbnailRepository {
+    create (params: PutObjectRequest): Promise<PutObjectOutput | AWSError> {
+      return null
+    }
+  }
+  return new CreateThumbnailRepositoryStub()
+}
+
 const mockFormatImageAdapter = () => {
   class FormatImageStub implements FormatImage {
     createThumbnail (base64: string): Promise<string> {
@@ -53,13 +69,23 @@ const mockFormatImageAdapter = () => {
   return new FormatImageStub()
 }
 
+const mockS3ThumbnailParams = (): S3ImageParams => ({
+  Bucket: process.env.THUMBNAIL_BUCKET,
+  Key: `thumbnail-${new Date().getTime()}.png`,
+  ContentType: 'image/png',
+  ContentEncoding: 'base64',
+  Body: 'any-base-64'
+})
+
 const makeSut = (): SutTypes => {
   const loadImageRepositoryStub = mockLoadImageRepository()
+  const createThumbnailRepositoryStub = mockCreateThumbnailRepositoryStub()
   const formatImageStub = mockFormatImageAdapter()
-  const sut = new StorageCreateThumbnail(loadImageRepositoryStub, formatImageStub)
+  const sut = new StorageCreateThumbnail(loadImageRepositoryStub, formatImageStub, createThumbnailRepositoryStub)
   return {
     sut,
     loadImageRepositoryStub,
+    createThumbnailRepositoryStub,
     formatImageStub
   }
 }
@@ -67,6 +93,7 @@ const makeSut = (): SutTypes => {
 describe('StorageCreateThumbnail - Usecase', () => {
   
   beforeAll(() => {
+    process.env.THUMBNAIL_BUCKET = 'test-thumbnails'
     MockDate.set(new Date())
   })
   
@@ -108,5 +135,12 @@ describe('StorageCreateThumbnail - Usecase', () => {
     })
     const promise = sut.create(mockCreateThumbnailParams())
     await expect(promise).rejects.toThrow()
+  })
+
+  test('Should call CreateThumbnailRepository with correct values', async () => {
+    const { sut, createThumbnailRepositoryStub } = makeSut()
+    const createThumbnailSpy = jest.spyOn(createThumbnailRepositoryStub, 'create')
+    await sut.create(mockCreateThumbnailParams())
+    expect(createThumbnailSpy).toHaveBeenCalledWith(mockS3ThumbnailParams())
   })
 })
