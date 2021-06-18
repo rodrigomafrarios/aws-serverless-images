@@ -17,9 +17,13 @@ describe('Image Adapter', () => {
     const fileName = `image-${new Date().getTime()}`
     const results = imageAdapt(file)
     expect(results).toEqual({
-      buffer,
-      type,
-      fileName
+      image: {
+        Bucket: process.env.IMAGE_BUCKET,
+        Key: `${fileName}.${type}`,
+        ContentType: `image/${type}`,
+        ContentEncoding: 'base64',
+        Body: buffer
+      }
     })
   })
 })
