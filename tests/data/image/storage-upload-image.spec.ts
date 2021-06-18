@@ -1,21 +1,11 @@
 import { UploadImageRepository } from '@/data/interfaces/storage/image/upload-image-repository'
 import { StorageUploadImage } from '@/data/usecases/image/storage-upload-image'
 import { S3ImageParams } from '@/domain/models/image'
-import { AWSError } from 'aws-sdk'
-import { PutObjectOutput } from 'aws-sdk/clients/s3'
+import { mockUploadImageRepositoryStub } from '../mocks/image-mocks'
 
 type SutTypes = {
   sut: StorageUploadImage
   uploadImageRepositoryStub: UploadImageRepository
-}
-
-const mockUploadImageRepository = (): UploadImageRepository => {
-  class UploadImageRepositoryStub implements UploadImageRepository {
-    async upload (image: any): Promise<PutObjectOutput | AWSError> {
-      return null
-    }
-  }
-  return new UploadImageRepositoryStub()
 }
 
 const mockS3ImageParams = (): S3ImageParams => ({
@@ -27,7 +17,7 @@ const mockS3ImageParams = (): S3ImageParams => ({
 })
 
 const makeSut = (): SutTypes => {
-  const uploadImageRepositoryStub = mockUploadImageRepository()
+  const uploadImageRepositoryStub = mockUploadImageRepositoryStub()
   const sut = new StorageUploadImage(uploadImageRepositoryStub)
   return {
     sut,
