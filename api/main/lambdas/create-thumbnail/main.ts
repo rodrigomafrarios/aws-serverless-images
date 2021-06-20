@@ -10,9 +10,7 @@ import { S3Event } from 'aws-lambda'
 
 const createThumbnail = async (event: S3Event) => {
   const controller = makeCreateThumbnailController()
-  const httpResponse = lambdaAdapt(controller)({
-    body: event
-  })
+  const httpResponse = lambdaAdapt(controller)(event)
   return httpResponse
 }
 
