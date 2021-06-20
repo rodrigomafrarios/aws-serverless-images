@@ -40,9 +40,9 @@ describe('CreateThumbnailController', () => {
     const createThumbnailSpy = jest.spyOn(createThumbnail, 'create')
     await sut.handle(mockHttpRequest())
 
-    const { Records } = mockS3PutEvent()
-    const bucket = Records[0].s3.bucket.name
-    const key = Records[0].s3.object.key
+    const { body } = mockHttpRequest()
+    const bucket = body.Records[0].s3.bucket.name
+    const key = body.Records[0].s3.object.key
 
     expect(createThumbnailSpy).toHaveBeenCalledWith({
       Bucket: bucket,
