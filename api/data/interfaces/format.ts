@@ -1,3 +1,3 @@
 export interface FormatImage {
-  createThumbnail: (image: string) => Promise<string>
+  createThumbnail: (image: any) => Promise<Buffer>
 }

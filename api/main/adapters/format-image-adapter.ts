@@ -2,8 +2,8 @@ import { FormatImage } from '@/data/interfaces/format'
 import imageThumbnail from 'image-thumbnail'
 
 export class FormatImageAdapter implements FormatImage {
-  async createThumbnail (image: string): Promise<string> {
-    const base64 = await imageThumbnail(image, { responseType: 'base64' })
-    return base64
+  async createThumbnail (base64: Buffer): Promise<Buffer> {
+    const buffer = await imageThumbnail(base64)
+    return buffer
   }
 }

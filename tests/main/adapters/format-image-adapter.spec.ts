@@ -13,7 +13,9 @@ describe('FormatImageAdapter', () => {
     try {
       const sut = mockFormatImageAdapter()
       const base64 = await sut.createThumbnail(file)
+      const type = base64.split(';')[0].split('/')[1]
       expect(typeof base64).toBe('string')
+      expect(type).toBe('jpeg')
     } catch (error) {
       console.error(error)
     }

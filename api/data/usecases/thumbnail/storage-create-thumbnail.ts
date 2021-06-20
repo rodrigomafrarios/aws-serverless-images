@@ -18,12 +18,11 @@ export class StorageCreateThumbnail implements CreateThumbnail {
   async create (s3ThumbnailParams: S3ThumbnailParams): Promise<void> {
     const image = await this.loadImageRepository.loadByKey(s3ThumbnailParams)
     if (image) {
-      const base64 = image.Body.toString('base64')
-      const thumbnail = await this.formatImage.createThumbnail(base64)
+      const thumbnail = await this.formatImage.createThumbnail(image.Body)
       await this.uploadImageRepository.upload({
         Bucket: process.env.THUMBNAIL_BUCKET,
-        Key: `thumbnail-${new Date().getTime()}.png`,
-        ContentType: 'image/png',
+        Key: `thumbnail-${new Date().getTime()}.jpeg`,
+        ContentType: 'image/jpeg',
         ContentEncoding: 'base64',
         Body: thumbnail
       })

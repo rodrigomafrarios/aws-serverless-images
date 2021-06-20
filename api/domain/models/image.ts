@@ -1,7 +1,7 @@
 export interface S3ImageParams {
   Bucket: string
   Key: string
-  Body: string
+  Body: Buffer
   ContentEncoding?: string
   ContentType?: string
 }

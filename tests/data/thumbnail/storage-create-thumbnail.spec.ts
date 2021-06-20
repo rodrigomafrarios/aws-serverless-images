@@ -4,9 +4,7 @@ import {
 } from '@/data/usecases/thumbnail/storage-create-thumbnail'
 import { 
   GetObjectOutput,
-  GetObjectRequest,
-  PutObjectOutput,
-  PutObjectRequest
+  GetObjectRequest
 } from 'aws-sdk/clients/s3'
 import { 
   LoadImageRepository 
@@ -14,7 +12,6 @@ import {
 import { S3ThumbnailParams } from '@/domain/models/thumbnail'
 import MockDate from 'mockdate'
 import { FormatImage } from '@/data/interfaces/format'
-import { AWSError } from 'aws-sdk'
 import { S3ImageParams } from '@/domain/models/image'
 import { 
   UploadImageRepository
@@ -53,8 +50,9 @@ const mockLoadImageRepositoryStub = (): LoadImageRepository => {
 
 const mockFormatImageAdapter = () => {
   class FormatImageStub implements FormatImage {
-    createThumbnail (base64: string): Promise<string> {
-      return Promise.resolve('any-base-64')
+    createThumbnail (base64: string): Promise<Buffer> {
+      const buffer = Buffer.from('any-string')
+      return Promise.resolve(buffer)
     }
   }
 
@@ -63,10 +61,10 @@ const mockFormatImageAdapter = () => {
 
 const mockS3ThumbnailParams = (): S3ImageParams => ({
   Bucket: process.env.THUMBNAIL_BUCKET,
-  Key: `thumbnail-${new Date().getTime()}.png`,
-  ContentType: 'image/png',
+  Key: `thumbnail-${new Date().getTime()}.jpeg`,
+  ContentType: 'image/jpeg',
   ContentEncoding: 'base64',
-  Body: 'any-base-64'
+  Body: Buffer.from('any-string')
 })
 
 const makeSut = (): SutTypes => {
