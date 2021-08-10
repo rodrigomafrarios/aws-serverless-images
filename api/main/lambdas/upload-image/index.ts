@@ -1,10 +1,11 @@
-import schema from '@/main/lambdas/upload-image/schema'
+/* eslint-disable no-template-curly-in-string */
+import schema from '../../../main/lambdas/upload-image/schema'
 import { handlerPath } from '@/libs/handlerResolver'
 
 export default {
-  role: "${ssm:${self:custom.stage}-upload-image-iam-role}",
+  role: '${ssm:${self:custom.stage}-upload-image-iam-role}',
   environment: {
-    IMAGE_BUCKET: "${ssm:${self:custom.stage}-upload-image-bucket}"
+    IMAGE_BUCKET: '${ssm:${self:custom.stage}-upload-image-bucket}'
   },
   handler: `${handlerPath(__dirname)}/main.handler`,
   events: [
@@ -13,7 +14,7 @@ export default {
         method: 'post',
         path: 'image/create',
         authorizer: {
-          arn: "${ssm:${self:custom.stage}-authorizer-arn}"
+          arn: '${ssm:${self:custom.stage}-authorizer-arn}'
         },
         request: {
           schema: {

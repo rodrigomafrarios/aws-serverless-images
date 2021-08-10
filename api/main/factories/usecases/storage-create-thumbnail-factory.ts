@@ -2,7 +2,7 @@ import { StorageCreateThumbnail } from '@/data/usecases/thumbnail/storage-create
 import { CreateThumbnail } from '@/domain/usecases/thumbnail/create-thumbnail'
 import { S3ClientFactory } from '@/infra/aws/aws-config-factory'
 import { ImageS3Repository } from '@/infra/storage/s3/image-s3-repository'
-import { FormatImageAdapter } from '@/main/adapters/format-image-adapter'
+import { FormatImageAdapter } from '../../../main/adapters/format-image-adapter'
 
 export const makeStorageCreateThumbnail = (): CreateThumbnail => {
   const client = S3ClientFactory({

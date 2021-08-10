@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript'
 
-import { uploadImage, createThumbnail } from '@/main/lambdas'
+import { uploadImage, createThumbnail } from './api/main/lambdas'
 
 const serverlessConfiguration: AWS = {
   service: 's3-thumbnail-generator',
