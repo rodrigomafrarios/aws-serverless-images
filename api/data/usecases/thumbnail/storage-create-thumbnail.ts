@@ -1,9 +1,9 @@
 import { FormatImage } from '@/data/interfaces/format'
-import { 
+import {
   LoadImageRepository
 } from '@/data/interfaces/storage/image/load-image-repository'
-import { 
-  UploadImageRepository 
+import {
+  UploadImageRepository
 } from '@/data/interfaces/storage/image/upload-image-repository'
 import { S3ThumbnailParams } from '@/domain/models/thumbnail'
 import { CreateThumbnail } from '@/domain/usecases/thumbnail/create-thumbnail'

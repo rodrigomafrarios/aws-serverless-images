@@ -13,7 +13,7 @@ const mockS3ImageParams = (): S3ImageParams => ({
   Key: 'teste.png',
   ContentType: 'image/png',
   ContentEncoding: 'base64',
-  Body: 'buffer'
+  Body: Buffer.from('buffer')
 })
 
 const makeSut = (): SutTypes => {

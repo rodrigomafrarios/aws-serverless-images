@@ -13,7 +13,7 @@ export class CreateThumbnailController implements Controller {
 
       const bucket = body.Records[0].s3.bucket.name
       const key = body.Records[0].s3.object.key
-      
+
       await this.createThumbnail.create({
         Bucket: bucket,
         Key: key
