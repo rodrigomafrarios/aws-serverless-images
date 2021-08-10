@@ -1,5 +1,5 @@
 /* eslint-disable no-template-curly-in-string */
-import schema from '../../../main/lambdas/upload-image/schema'
+import schema from '../../lambdas/upload-image/schema'
 import { handlerPath } from '@/libs/handlerResolver'
 
 export default {
