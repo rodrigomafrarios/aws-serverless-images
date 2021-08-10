@@ -1,20 +1,20 @@
 on:
   push:
     branches:
-      - dev
+      - sdx
 
 name: Deploy to Sandbox (S3)
 
 jobs:
   deploy:
-    name: Deploy
+    name: deploy
     runs-on: ubuntu-latest
     timeout-minutes: 5
-
+    environment: sdx
     steps:
       - name: Checkout
         uses: actions/checkout@v2
-
+        
       - name: Configure AWS credentials
         uses: aws-actions/configure-aws-credentials@v1
         with:
@@ -22,17 +22,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Build
+      - name: Mkdir zip paths
+        id: dist
+        run: |
+          npm run mkdir:dist
+          npm run mkdir:api
+          npm run mkdir:nodejs
+
+      - name: Install & Build
         id: build
         run: |
-          echo npm install on `date`
           npm install
-
-          echo npm build on `date`
           npm run build
+
       - name: Upload
         id: upload
         run: |
-          echo Build completed on `date`
-          echo Uploading s3
-          aws s3 cp dist/latest.zip s3://{{ secrets.DEPLOY_BUCKET_DEV }}/deploy/latest.zip
+          functions=`cat lambdas`
+          for item in $functions; do aws s3 cp dist/latest.zip s3://${{ secrets.AWS_DEPLOY_BUCKET_NAME }}/deploy/$item/latest.zip; done
+          for item in $functions; do aws s3 cp dist/layer.zip s3://${{ secrets.AWS_DEPLOY_BUCKET_NAME }}/deploy/$item/layer.zip; done
