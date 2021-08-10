@@ -1,4 +1,5 @@
-import { imageAdapt } from '@/main/adapters/image-adapter'
+/* eslint-disable @typescript-eslint/restrict-template-expressions */
+import { imageAdapt } from '../../../api/main/adapters/image-adapter'
 import fs from 'fs'
 import MockDate from 'mockdate'
 
